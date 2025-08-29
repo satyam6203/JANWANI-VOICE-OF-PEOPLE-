@@ -22,7 +22,7 @@ public class EmailService {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper=new MimeMessageHelper(message,"utf-8");
             mimeMessageHelper.setSubject(subject);
-            mimeMessageHelper.setText(text);
+            mimeMessageHelper.setText(text,true);
             mimeMessageHelper.setTo(userEmail);
             javaMailSender.send(message);
         }

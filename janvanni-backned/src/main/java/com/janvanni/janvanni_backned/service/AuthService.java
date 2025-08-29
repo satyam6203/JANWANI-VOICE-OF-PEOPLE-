@@ -8,6 +8,6 @@ import com.janvanni.janvanni_backned.constants.USER_ROLE;
 public interface AuthService {
     String createUser(SignUpRequest req) throws Exception;
 
-    void sendLoginOtp(String email, USER_ROLE role) throws Exception;
+    void sendLoginOtp(String email) throws Exception;
     AuthResponse signing(LoginRequest request);
 }

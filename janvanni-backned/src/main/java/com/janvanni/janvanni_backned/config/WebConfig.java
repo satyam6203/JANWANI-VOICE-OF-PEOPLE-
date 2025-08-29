@@ -26,13 +26,18 @@ public class WebConfig {
                 .authorizeHttpRequests(auth -> auth
 
                         .requestMatchers(
-                                "/janvanni/auth/**",
-                                "/janvanni/sent/otp",
-                                "/janvanni/signup/**",
-                                "/janvanni/login/**"
+                                "/janwani/auth/**",
+                                "/janwani/sent/otp",
+                                "/janwani/signup/**",
+                                "/janwani/login/**",
+                                "/janwani/update/user",
+                                "janwani/user/profile",
+                                "janwani/create/admin",
+                                "janwani/admin/**"
+
                         ).permitAll()
 
-                        .requestMatchers("/janvanni/**").authenticated()
+                        .requestMatchers("/janwani/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)

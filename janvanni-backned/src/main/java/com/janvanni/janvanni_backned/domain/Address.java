@@ -1,7 +1,5 @@
-package com.janvanni.janvanni_backned.entity;
+package com.janvanni.janvanni_backned.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.janvanni.janvanni_backned.constants.USER_ROLE;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,19 +14,18 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Admin {
+public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String Password;
+    private String locality;
 
-    private String email;
+    private String address;
 
-    private String fullName;
+    private String city;
 
-    private String  mobile;
+    private String state;
 
-    private USER_ROLE role= USER_ROLE.ROLE_ADMIN;
+    private String pinCode;
 }

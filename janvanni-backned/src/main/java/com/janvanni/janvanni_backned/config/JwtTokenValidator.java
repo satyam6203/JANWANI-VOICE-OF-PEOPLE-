@@ -57,7 +57,7 @@ public class JwtTokenValidator extends OncePerRequestFilter {
 
         } catch (io.jsonwebtoken.ExpiredJwtException ex) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("JWT token has expired");
+//            response.getWriter().write("JWT token has expired");
             return;
 
         } catch (Exception e) {

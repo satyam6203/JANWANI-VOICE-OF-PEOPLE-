@@ -34,7 +34,7 @@ public class AuthController {
 
     @PostMapping("/sent/otp")
     public ResponseEntity<ApiResponse> SendOtpHandler(@RequestBody LoginOtpRequest req) throws Exception {
-        authService.sendLoginOtp(req.getEmail(),req.getRole());
+        authService.sendLoginOtp(req.getEmail());
         ApiResponse res = new ApiResponse();
         res.setMessage("otp sent successfully");
         return ResponseEntity.ok(res);
@@ -43,8 +43,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> LoginHandler(@RequestBody LoginRequest req) throws Exception {
         AuthResponse authResponse = authService.signing(req);
-        AuthResponse res = new AuthResponse();
-        res.setMessage("Login Successfully..");
-        return ResponseEntity.ok(res);
+        authResponse.setMessage("Login Successfully..");
+        return ResponseEntity.ok(authResponse);
     }
 }
