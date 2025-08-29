@@ -40,11 +40,11 @@ public class AuthController {
         return ResponseEntity.ok(res);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> LoginHandler(@RequestBody LoginRequest req) throws Exception {
-        AuthResponse authResponse = authService.signing(req);
-        AuthResponse res = new AuthResponse();
-        res.setMessage("Login Successfully..");
-        return ResponseEntity.ok(res);
-    }
+@PostMapping("/login")
+public ResponseEntity<AuthResponse> LoginHandler(@RequestBody LoginRequest req) throws Exception {
+    AuthResponse authResponse = authService.signing(req);
+    authResponse.setMessage("Login Successfully..");
+    return ResponseEntity.ok(authResponse);
+}
+
 }

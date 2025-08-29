@@ -57,9 +57,8 @@ public class JwtTokenValidator extends OncePerRequestFilter {
 
         } catch (io.jsonwebtoken.ExpiredJwtException ex) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("JWT token has expired");
+            // response.sendRedirect("/login"); // This will redirect to the login page
             return;
-
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Invalid or malformed JWT token");
