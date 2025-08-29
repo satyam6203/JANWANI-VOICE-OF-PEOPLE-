@@ -29,12 +29,16 @@ public class WebConfig {
                                 "/janwani/auth/**",
                                 "/janwani/sent/otp",
                                 "/janwani/signup/**",
+<<<<<<< HEAD
                                 "/janwani/login/**",
                                 "/janwani/update/user",
                                 "janwani/user/profile",
                                 "janwani/create/admin",
                                 "janwani/admin/**"
 
+=======
+                                "/janwani/login/**"
+>>>>>>> 05f9b84aa2951f2adb0ec7d7899eb0e27ea0547d
                         ).permitAll()
 
                         .requestMatchers("/janwani/**").authenticated()
