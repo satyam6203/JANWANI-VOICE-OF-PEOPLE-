@@ -4,10 +4,14 @@ import com.janvanni.janvanni_backned.Request.LoginRequest;
 import com.janvanni.janvanni_backned.Response.SignUpRequest;
 import com.janvanni.janvanni_backned.constants.USER_ROLE;
 import com.janvanni.janvanni_backned.entity.Admin;
+import com.janvanni.janvanni_backned.entity.User;
 
 public interface AdminService {
 
     String createAdmin(SignUpRequest request) throws Exception;
 //    String signing(LoginRequest request) throws Exception;
     void sendAdminLoginOtp(String email) throws Exception;
+
+    void deleteAccount(Long id);
+    Admin getAdminProfile(String jwt);
 }

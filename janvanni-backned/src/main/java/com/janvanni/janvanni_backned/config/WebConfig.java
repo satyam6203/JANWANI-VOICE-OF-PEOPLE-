@@ -22,6 +22,7 @@ public class WebConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
 
@@ -29,28 +30,24 @@ public class WebConfig {
                                 "/janwani/auth/**",
                                 "/janwani/sent/otp",
                                 "/janwani/signup/**",
-<<<<<<< HEAD
-                                "/janwani/login/**",
-                                "/janwani/update/user",
-                                "janwani/user/profile",
-                                "janwani/create/admin",
-                                "janwani/admin/**"
-
-=======
                                 "/janwani/login/**"
->>>>>>> 05f9b84aa2951f2adb0ec7d7899eb0e27ea0547d
                         ).permitAll()
 
-                        .requestMatchers("/janwani/**").authenticated()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/janwani/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/janwani/create/admin").hasRole("ADMIN")
+
+                        .requestMatchers(
+                                "/janwani/user/**",
+                                "/janwani/update/user",
+                                "/janwani/user/profile"
+                        ).hasAnyRole("USER", "ADMIN")
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()));
-
         return http.build();
     }
-
 
     private CorsConfigurationSource corsConfigurationSource() {
         return new CorsConfigurationSource() {
@@ -66,15 +63,15 @@ public class WebConfig {
                 return cfg;
             }
         };
-    };
+    }
 
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public RestTemplate restTemplate(){
+    public RestTemplate restTemplate() {
         return new RestTemplate();
     }
 }

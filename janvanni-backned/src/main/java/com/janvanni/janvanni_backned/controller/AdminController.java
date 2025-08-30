@@ -12,10 +12,7 @@ import com.janvanni.janvanni_backned.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/janwani/admin")
@@ -38,5 +35,11 @@ public class AdminController {
         ApiResponse res = new ApiResponse();
         res.setMessage("otp sent successfully");
         return ResponseEntity.ok(res);
+    }
+
+    @DeleteMapping("/delete/account")
+    public ResponseEntity<Void> deleteAdminAccount(@PathVariable Long id){
+        adminService.deleteAccount(id);
+        return ResponseEntity.noContent().build();
     }
 }

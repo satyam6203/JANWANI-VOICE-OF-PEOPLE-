@@ -7,7 +7,7 @@ public class SignUpRequest {
     private String email;
     private String password;
     private String otp;
-    private String password;
     private String mobileNumber;
     private String fullName;
+    private String confirmPassword;
 }

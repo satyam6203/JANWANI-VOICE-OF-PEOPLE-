@@ -46,30 +46,37 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String createUser(SignUpRequest req) throws Exception {
 
-        VerificationCode verificationCode = verificationRepo.findByEmail(req.getEmail());
+        if (!req.getPassword().equals(req.getConfirmPassword())) {
+            throw new RuntimeException("Password and Confirm Password do not match!");
+        }
 
-        if(verificationCode == null || !verificationCode.getOtp().equals(req.getOtp())){
-            throw  new Exception("Wrong otp..");
+        VerificationCode verificationCode = verificationRepo.findByEmail(req.getEmail());
+        if (verificationCode == null || !verificationCode.getOtp().equals(req.getOtp())) {
+            throw new Exception("Invalid OTP!");
         }
 
         User user = userRepo.findByEmail(req.getEmail());
-        if(user == null){
+        if (user == null) {
             User createUser = new User();
             createUser.setEmail(req.getEmail());
             createUser.setFullName(req.getFullName());
             createUser.setMobile(req.getMobileNumber());
             createUser.setRole(USER_ROLE.ROLE_USER);
-            createUser.setPassword(passwordEncoder.encode(req.getOtp()));
+
+            createUser.setPassword(passwordEncoder.encode(req.getPassword()));
+
             user = userRepo.save(createUser);
         }
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(USER_ROLE.ROLE_USER.toString()));
-        Authentication authentication = new UsernamePasswordAuthenticationToken(req.getEmail(),null,authorities);
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(req.getEmail(), null, authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return jwtProvider.generateToken(authentication);
     }
+
 
     @Override
     public void sendLoginOtp(String email) throws Exception {
@@ -106,40 +113,38 @@ public class AuthServiceImpl implements AuthService {
                 "</head>" +
                 "<body style='margin:0; padding:0; font-family: Arial, sans-serif; background-color:#f9f9f9;'>" +
 
-                "<div style='max-width:600px; margin:30px auto; background-color:#ffffff; padding:30px; " +
-                "border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.1);'>" +
+                "<div style='max-width:600px; margin:15px auto; background-color:#ffffff; padding:20px; " +
+                "border-radius:10px; box-shadow:0 3px 10px rgba(0,0,0,0.08);'>" +
 
                 // Title Header
-                "<h2 style='color:#1A73E8; text-align:center; font-size:24px; margin-bottom:10px;'>Janvanni</h2>" +
-                "<p style='text-align:center; color:#666; font-size:14px; margin-top:0;'>Your Voice, Our Action!</p>" +
+                "<h2 style='color:#1A73E8; text-align:center; font-size:22px; margin:5px 0;'>Janvanni</h2>" +
+                "<p style='text-align:center; color:#666; font-size:13px; margin:0 0 15px;'>Your Voice, Our Action!</p>" +
 
                 // Greeting
-                "<h3 style='color:#2C3E50; font-size:20px;'>Dear User,</h3>" +
-                "<p style='color:#333; font-size:15px; line-height:1.6;'>Welcome to <b>Janvanni</b>!<br>" +
+                "<h3 style='color:#2C3E50; font-size:18px; margin:5px 0;'>Dear User,</h3>" +
+                "<p style='color:#333; font-size:14px; line-height:1.5; margin:8px 0;'>Welcome to <b>Janvanni</b>!<br>" +
                 "Your One-Time Password (OTP) for login/signup is:</p>" +
 
                 // OTP Highlight Box
-                "<div style='background-color:#F3F8FF; border:2px dashed #1A73E8; padding:15px; " +
-                "margin:20px auto; width:fit-content; border-radius:10px;'>" +
-                "<h1 style='color:#1A73E8; font-size:42px; letter-spacing:8px; margin:0; text-align:center;'>" + otp + "</h1>" +
+                "<div style='background-color:#F3F8FF; border:2px dashed #1A73E8; padding:12px; " +
+                "margin:12px auto; width:fit-content; border-radius:8px;'>" +
+                "<h1 style='color:#1A73E8; font-size:36px; letter-spacing:6px; margin:0; text-align:center;'>" + otp + "</h1>" +
                 "</div>" +
 
                 // Warning Message
-                "<p style='color:#D32F2F; font-weight:bold; font-size:14px; text-align:center;'>⚠️ Do NOT share this OTP with anyone.</p>" +
+                "<p style='color:#D32F2F; font-weight:bold; font-size:13px; text-align:center; margin:8px 0;'>⚠️ Do NOT share this OTP with anyone.</p>" +
 
                 // Validity Info
-                "<p style='color:#333; font-size:15px; text-align:center;'>This OTP is valid for the next <b>5 minutes</b>.</p>" +
+                "<p style='color:#333; font-size:13px; text-align:center; margin:5px 0;'>This OTP is valid for the next <b>5 minutes</b>.</p>" +
 
                 // Footer
-                "<p style='color:#888; font-size:14px; text-align:center; margin-top:25px;'>If you didn't request this, please ignore this email.</p>" +
-                "<hr style='margin:25px 0; border:0; border-top:1px solid #eee;'>" +
-                "<p style='text-align:center; font-size:15px; color:#2C3E50;'>Best Regards,<br><b>Team Janvanni</b></p>" +
+                "<p style='color:#888; font-size:12px; text-align:center; margin:10px 0 5px;'>If you didn't request this, please ignore this email.</p>" +
+                "<hr style='margin:10px 0; border:0; border-top:1px solid #eee;'>" +
+                "<p style='text-align:center; font-size:13px; color:#2C3E50; margin:5px 0;'>Best Regards,<br><b>Team Janvanni</b></p>" +
 
                 "</div>" +
                 "</body>" +
                 "</html>";
-
-
 
         emailService.sendVerificationOtpEmail(email,otp,subject,text);
     }
@@ -182,5 +187,4 @@ public class AuthServiceImpl implements AuthService {
                 userDetails.getAuthorities()
         );
     }
-
 }

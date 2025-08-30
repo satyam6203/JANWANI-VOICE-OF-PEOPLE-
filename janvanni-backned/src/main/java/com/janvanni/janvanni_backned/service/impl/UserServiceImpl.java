@@ -1,5 +1,6 @@
 package com.janvanni.janvanni_backned.service.impl;
 
+import com.janvanni.janvanni_backned.Request.ChangePasswordRequest;
 import com.janvanni.janvanni_backned.config.JwtProvider;
 import com.janvanni.janvanni_backned.constants.USER_ROLE;
 import com.janvanni.janvanni_backned.entity.Admin;
@@ -12,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private static final String USER_PREFIX = "admin_";
     private final JwtProvider jwtProvider;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User getUserProfile(String jwt) {
@@ -103,6 +106,27 @@ public class UserServiceImpl implements UserService {
         }
         userRepo.deleteById(id);
     }
+
+    @Override
+    public User updateUserPassword(Long id, ChangePasswordRequest request) throws Exception {
+        User existUser = getUserById(id);
+
+        if (!passwordEncoder.matches(request.getOldPassword(), existUser.getPassword())) {
+            throw new Exception("Old password is incorrect!");
+        }
+
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new Exception("New password and confirm password do not match!");
+        }
+
+        if (passwordEncoder.matches(request.getNewPassword(), existUser.getPassword())) {
+            throw new Exception("New password cannot be the same as the old password!");
+        }
+
+        existUser.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        return userRepo.save(existUser);
+    }
+
 
     private UserDetails buildUserDetails(String email, String password, USER_ROLE role) {
         if(role == null){
