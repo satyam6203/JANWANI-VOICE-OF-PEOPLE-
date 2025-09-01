@@ -33,6 +33,9 @@ public class User {
 
     private USER_ROLE role= USER_ROLE.ROLE_USER;
 
+    @Column(length = 1000)
+    private String profilePic;
+
     @OneToMany
     private Set<Address> address=new HashSet<>();
 }

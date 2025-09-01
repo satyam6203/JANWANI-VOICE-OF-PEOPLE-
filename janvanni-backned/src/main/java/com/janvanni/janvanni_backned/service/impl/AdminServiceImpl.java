@@ -1,5 +1,6 @@
 package com.janvanni.janvanni_backned.service.impl;
 
+import com.janvanni.janvanni_backned.Request.ChangePasswordRequest;
 import com.janvanni.janvanni_backned.Response.SignUpRequest;
 import com.janvanni.janvanni_backned.Utils.OtpUtils;
 import com.janvanni.janvanni_backned.config.JwtProvider;
@@ -147,6 +148,32 @@ public class AdminServiceImpl implements AdminService {
     public Admin getAdminProfile(String jwt) {
         String email = jwtProvider.getEmailFromToken(jwt);
         return this.getAdminProfile(email);
+    }
+
+    @Override
+    public Admin getAdminById(Long id) throws Exception {
+        return adminRepo.findById(id)
+                .orElseThrow(()->new Exception("User not find by this id ->"+id));
+    }
+
+    @Override
+    public Admin updateAdminPassword(Long id, ChangePasswordRequest request) throws Exception {
+        Admin existAdmin =getAdminById(id);
+
+        if (!passwordEncoder.matches(request.getOldPassword(), existAdmin.getPassword())) {
+            throw new Exception("Old password is incorrect!");
+        }
+
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new Exception("New password and confirm password do not match!");
+        }
+
+        if (passwordEncoder.matches(request.getNewPassword(), existAdmin.getPassword())) {
+            throw new Exception("New password cannot be the same as the old password!");
+        }
+
+        existAdmin.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        return adminRepo.save(existAdmin);
     }
 }
 

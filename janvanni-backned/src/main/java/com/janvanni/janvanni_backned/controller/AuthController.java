@@ -8,6 +8,7 @@ import com.janvanni.janvanni_backned.Response.SignUpRequest;
 import com.janvanni.janvanni_backned.constants.USER_ROLE;
 import com.janvanni.janvanni_backned.repo.UserRepo;
 import com.janvanni.janvanni_backned.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,9 +42,15 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> LoginHandler(@RequestBody LoginRequest req) throws Exception {
-        AuthResponse authResponse = authService.signing(req);
+    public ResponseEntity<AuthResponse> LoginHandler(
+            @RequestBody LoginRequest req,
+            HttpServletRequest request) throws Exception {
+
+        String clientIp = authService.getClientIp(request);
+
+        AuthResponse authResponse = authService.signing(req, clientIp);
         authResponse.setMessage("Login Successfully..");
+
         return ResponseEntity.ok(authResponse);
     }
 }

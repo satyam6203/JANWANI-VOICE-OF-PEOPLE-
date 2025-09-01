@@ -7,6 +7,7 @@ import com.janvanni.janvanni_backned.entity.Admin;
 import com.janvanni.janvanni_backned.entity.User;
 import com.janvanni.janvanni_backned.repo.AdminRepo;
 import com.janvanni.janvanni_backned.repo.UserRepo;
+import com.janvanni.janvanni_backned.service.ImageService;
 import com.janvanni.janvanni_backned.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,10 +16,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.channels.MulticastChannel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private static final String USER_PREFIX = "admin_";
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
+    private final ImageService imageService;
 
     @Override
     public User getUserProfile(String jwt) {
@@ -73,21 +76,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long id, User user) throws Exception {
+    public User updateUser(Long id, User user, MultipartFile profilePic) throws Exception {
+        // Fetch existing user
         User existUser = getUserById(id);
 
-        if(user.getFullName() != null){
+        // Update name
+        if (user.getFullName() != null && !user.getFullName().isEmpty()) {
             existUser.setFullName(user.getFullName());
         }
 
-        if(user.getMobile() != null){
+        // Update mobile
+        if (user.getMobile() != null && !user.getMobile().isEmpty()) {
             existUser.setMobile(user.getMobile());
         }
 
-        if(user.getEmail() != null){
-            existUser.setEmail(user.getMobile());
+        // Update email
+        if (user.getEmail() != null && !user.getEmail().isEmpty()) {
+            existUser.setEmail(user.getEmail());
         }
 
+        // Upload profile image to Cloudinary
+        if (profilePic != null && !profilePic.isEmpty()) {
+            String imageUrl = imageService.uploadImage((MultipartFile) profilePic, "user_" + id + "_profile");
+            existUser.setProfilePic(imageUrl);
+        }
+
+        // Save updated user
         return userRepo.save(existUser);
     }
 

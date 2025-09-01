@@ -1,10 +1,9 @@
 package com.janvanni.janvanni_backned.controller;
 
+import com.janvanni.janvanni_backned.Request.ChangePasswordRequest;
 import com.janvanni.janvanni_backned.Request.LoginOtpRequest;
 import com.janvanni.janvanni_backned.Response.ApiResponse;
 import com.janvanni.janvanni_backned.Response.SignUpRequest;
-import com.janvanni.janvanni_backned.Utils.OtpUtils;
-import com.janvanni.janvanni_backned.domain.VerificationCode;
 import com.janvanni.janvanni_backned.entity.Admin;
 import com.janvanni.janvanni_backned.repo.VerificationRepo;
 import com.janvanni.janvanni_backned.service.AdminService;
@@ -41,5 +40,17 @@ public class AdminController {
     public ResponseEntity<Void> deleteAdminAccount(@PathVariable Long id){
         adminService.deleteAccount(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/admin/{id}/change-password")
+    public ResponseEntity<?> changePassword(
+            @PathVariable Long id,
+            @RequestBody ChangePasswordRequest request) {
+        try {
+            Admin updatedAdmin = adminService.updateAdminPassword(id, request);
+            return ResponseEntity.ok("Password updated successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
