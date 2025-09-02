@@ -35,9 +35,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserProfile(String jwt) {
+        if (jwt.startsWith("Bearer ")) {
+            jwt = jwt.substring(7);
+        }
+
         String email = jwtProvider.getEmailFromToken(jwt);
-        return this.getUserProfile(email);
+
+        return userRepo.findByEmail(email);
     }
+
 
     @Override
     public User findUserByJwtToken(String jwt) throws Exception {
@@ -100,6 +106,7 @@ public class UserServiceImpl implements UserService {
             String imageUrl = imageService.uploadImage((MultipartFile) profilePic, "user_" + id + "_profile");
             existUser.setProfilePic(imageUrl);
         }
+
 
         // Save updated user
         return userRepo.save(existUser);

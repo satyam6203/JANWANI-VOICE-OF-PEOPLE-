@@ -30,7 +30,7 @@ public class EmailService {
             throw new MailSendException("Failed to send email");
         }
     }
-    
+
     public void sendAdminPasswordChangeEmail(String adminEmail, String adminName) {
         try {
             MimeMessage message = javaMailSender.createMimeMessage();

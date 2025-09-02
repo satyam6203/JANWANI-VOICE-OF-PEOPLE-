@@ -32,7 +32,9 @@ public class WebConfig {
                                 "/janwani/signup/**",
                                 "/janwani/login/**",
                                 "/janwani/user/**",
-                                "/janwani/users/{id}/change-password"
+                                "/janwani/users/{id}/change-password",
+                                "/janwani/user/update",
+                                "/janwani/user/profile"
                         ).permitAll()
 
                         .requestMatchers("/janwani/admin/**").hasRole("ADMIN")
@@ -40,8 +42,8 @@ public class WebConfig {
 
                         .requestMatchers(
                                 "/janwani/user/**",
-                                "/janwani/update/user",
-                                "/janwani/user/profile"
+                                "/janwani/update/user"
+//                                "/janwani/user/profile"
 
                         ).hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()

@@ -50,10 +50,12 @@ export default function Profile() {
           </Card>
         </Link>
 
+        <Link to="/Notifications" >
         <Card>
           <span>Notifications</span>
           <Bell className="w-5 h-5 text-gray-500" onClick={handleNotifications} />
         </Card>
+        </Link>
 
         <Card>
           <span>Support and Help</span>

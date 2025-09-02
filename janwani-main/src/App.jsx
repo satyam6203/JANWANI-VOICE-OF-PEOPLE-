@@ -9,6 +9,9 @@ import Signup from './pages/Signup'
 import Login from './pages/Login'
 import EditProfile from './pages/EditProfile'
 import IssueResolved from './pages/IssueResolved'
+import Notifications from './pages/Notifications'
+import RaiseATicket from './pages/RaiseATicket'
+import Map from './pages/Map'
 
 function App() {
 
@@ -31,7 +34,9 @@ function AppRoutes() {
       <Route path='/myTickets/completed/ticket' element={<IssueResolved />} />
       <Route path='/signup' element={<Signup />} />
       <Route path='/login' element={<Login />} />
-      
+      <Route path='/Notifications' element={<Notifications />} />
+      <Route path='/RaiseATicket' element={<RaiseATicket />} />
+      <Route path='/Map' element={<Map />} />
     </Routes>
   </div>
   )

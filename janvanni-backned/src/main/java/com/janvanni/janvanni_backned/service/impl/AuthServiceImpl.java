@@ -251,7 +251,7 @@ public class AuthServiceImpl implements AuthService {
         }
         return ip.contains(",") ? ip.split(",")[0] : ip;
     }
-    
+
     private String getLocationFromIp(String ip) {
         // Ignore localhost
         if ("127.0.0.1".equals(ip) || "0:0:0:0:0:0:0:1".equals(ip)) {
